@@ -147,15 +147,15 @@ CSS3动画可是web前端中的灵魂。普普通通的DIV加上一个绚丽的�
 
 - animation-play-state：动画的播放状态，paused暂停，running播放。我们可以通过动态的变成这个CSS属性，达到播放、暂停动画的效果。（你可以想象成是电脑视频播放器的暂停、播放键）
 
-- animation：动画简洁指令。这个放到最后说，是因为这个是上面**前六个**属性的混合用法。就是不想写那么多行代码的时候，用这个，一行就搞定。格式如下：
+- animation：动画简洁指令。这个放到最后说，是因为这个是上面**前七个**属性的混合用法。就是不想写那么多行代码的时候，用这个，一行就搞定。格式如下：
 
   ```css
-  animation: animation-name animation-duration animation-timing-function animation-delay animation-iteration-count animation-direction;
+  animation: animation-name animation-duration animation-timing-function animation-delay animation-iteration-count animation-direction animation-fill-mode;
   翻译过来就是：
-  animation: 剧本名字 动画时长 速度函数 播放前的延迟时长 动画重复播放的次数 偶数周期用不用倒放;
+  animation: 剧本名字 动画时长 速度函数 播放前的延迟时长 动画重复播放的次数 偶数周期用不用倒放 动画结束后的动画元素停留方式;
   ```
 
-
+当然，如果你不需要把每个参数都定义出来（使用它的默认值），那么直接在书写animation字段的时候将他忽略掉就可以了。
 
 码了一大堆文字，估计又难以理解了，我们现在实际操作一下。
 
@@ -179,7 +179,7 @@ keepmoving00这个剧本演两次，每次演完后都倒着再演一次（相�
 }
 ```
 
-足足六行代码，我们给它压缩成一行，用animation属性来写就是：
+足足六行代码，我们给它压缩成一行，用animation属性来写就是下面这样，这里我们忽略了最后一个参数`animation-fill-mode`，使用了它的默认值，即最后执行完回到元素动画执行前状态：
 
 ```css
 .animate-object-00 {
@@ -306,8 +306,172 @@ ease-in-out: cubic-bezier(0.42,0,0.58,1);
 
 >  https://cubic-bezier.com/#.17,.67,.41,1.67
 
-![c06](/Users/lemonitcn/Documents/code/lemon-full-stack/web/0001/resource/c06.png)打开后，可以看到界面上是上图这样的，这个曲线的Y轴冒出到外面去了。联系到刚才咱们介绍的`曲线图的纵坐标Y轴，表示动画的执行进度`，可以看出，画出来的曲线如果超过Y轴的话，那么最后实际执行的动画就会超出预计的范围。大家可以自己尝试拖动曲线，然后放到代码里面测试一下。
+![c06](resource/c05.png)打开后，可以看到界面上是上图这样的，这个曲线的Y轴冒出到外面去了。联系到刚才咱们介绍的`曲线图的纵坐标Y轴，表示动画的执行进度`，可以看出，画出来的曲线如果超过Y轴的话，那么最后实际执行的动画就会超出预计的范围。大家可以自己尝试拖动曲线，然后放到代码里面测试一下。
 
-> P.S. 咱们的本片文章涉及到的所有实例代码均在这里哦：
+> 说明：咱们的本篇文章涉及到的所有示例代码均在这里哦，你可以将代码下载下来进行修改、测试：
 >
-> https://github.com/lemon-full-stack/web
+> https://github.com/lemon-full-stack/web/blob/main/0001/code/index.html
+
+有了这个曲线画图工具，我们就可以自定义出任意我们想要的动画速度效果了，比如：我们把曲线最后稍微弄一些在Y轴顶部的小波动，即可做出来略微有一些惯性的效果，这样我们的动画看起来就更加贴近现实世界：
+
+![c06](resource/c06.png)
+
+为了更加真实，我们把动画改成仅执行一次，同时关掉了偶数周期动画倒放的设置（实际上动画只执行一次已经可以达到这个禁用倒放的效果了），然后让最后动画执行完，停留在结束的原地：
+
+```css
+.animate-object-09 {
+  animation: keepMoving01 3s cubic-bezier(.78,1.45,.86,.93) 2s 1 normal forwards;
+}
+```
+
+最后动画效果我们看一下：
+
+![c06](resource/c07.gif)
+
+大家多加练习，相信以各位的聪明才智，再加上各位的审美，可以做出更加漂亮的动画~
+
+
+
+#### 4. animation-fill-mode到底会影响什么
+
+我们再看看`animation-fill-mode`属性，这个属性的可选值有四种：forwards，backwards，both，none。我们做个实验，对比一下他们有什么不同。我们先将原来的动画“剧本"复制一份，命名为keepMoving02，然后我们原来0%的关键帧中的颜色从原来的淡绿色改成红色#ff0000，这里我们注意下哈，原来动画元素的默认样式中的background字段我们仍是淡绿色不变，代码如下：
+
+```css
+@keyframes keepMoving02 {
+  0% {
+    left: 0;
+    background: #ff0000;
+  }
+  50% {
+    background: #333333;
+  }
+  100% {
+    left: 500px;
+    background: #fbe760;
+    transform: rotate(360deg);
+  }
+}
+.animate-object {
+  width: 100px;
+  height: 100px;
+  font-size: 12px;
+  border-radius: 50px;
+  background: #7cd460;
+  color: #ffffff;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+```
+
+接着我们造出来四个小球球，分别给定四种`animation-fill-mode`，注意：这四个动画我都设置了2s的延迟执行，这点很重要，因为不同的`animation-fill-mode`属性值，其在延迟执行范围内展现的样式 是不同的：
+
+```css
+.animate-object-09 {
+  animation: keepMoving02 3s cubic-bezier(.78,1.45,.86,.93) 2s 1 normal forwards;
+}
+.animate-object-10 {
+  animation: keepMoving02 3s cubic-bezier(.78,1.45,.86,.93) 2s 1 normal backwards;
+}
+.animate-object-11 {
+  animation: keepMoving02 3s cubic-bezier(.78,1.45,.86,.93) 2s 1 normal none;
+}
+.animate-object-12 {
+  animation: keepMoving02 3s cubic-bezier(.78,1.45,.86,.93) 2s 1 normal both;
+}
+```
+
+然后我们对比一下最后四种属性值的不同效果：
+
+![c06](resource/c08.gif)
+
+我们通过动图可以总结出如下的规律：
+
+- forwards：动画在延迟duration执行过程中使用的是元素的默认CSS样式（淡绿色），延迟结束后才变为0%关键帧的样式（红色），最后执行完毕停留在100%关键帧的样式（淡黄色）
+- backwards：在动画延迟duration执行过程中就已经将样式修改成0%关键帧（红色）的样式，动画执行过程中逐渐变成最后100%关键帧的样式（淡黄色），执行完毕后马上还原成动画元素默认CSS样式（淡绿色）
+- none：在动画延迟duration执行过程中使用的是元素的默认CSS样式（淡绿色），延迟结束后才变为0%关键帧的样式（红色），执行完毕后马上还原成动画元素默认CSS样式（淡绿色）
+- both：在动画延迟duration执行过程中就已经将样式修改成0%关键帧（红色）的样式，动画执行过程中逐渐变成最后100%关键帧的样式（淡黄色），最后执行完毕仍然停留在100%关键帧的样式（淡黄色）
+
+这段文字读起来很绕口，但是实际上挺简单的，总结起来其实就是个排列组合，如下表格：
+
+| animation-fill-mode      | 动画结束后保留100%关键帧样式 | 动画结束后还原为默认样式 |
+| :----------------------- | :--------------------------- | ------------------------ |
+| 延迟阶段使用默认样式     | farwards                     | none                     |
+| 延迟阶段使用0%关键帧样式 | both                         | backwards                |
+
+
+
+#### 5. 通过animation-play-state操作动画播放状态
+
+我们前文中介绍到了animation-play-state属性的作用，但是一直没有实际演示怎么用他。在这我们就来实际操作一波。首先，抛开JS，单纯的使用CSS来操作他。我们创建一个小球球，然后让他默认是暂停的状态，鼠标悬浮事件`:hover`中，我们将其设置为runnig状态，为了看效果，我们吧延迟给去掉了，然后让他无限重复动画滚动：
+
+```css
+.animate-object-13 {
+  animation: keepMoving02 3s cubic-bezier(.78, 1.45, .86, .93) infinite alternate both;
+  animation-play-state: paused;
+}
+
+.animate-object-13:hover {
+  animation-play-state: running;
+}
+```
+
+这样就可以做到如下的效果（有点像鼠标推着球在走哈，各位可以发挥自己的想象创作各种好看的动画）：
+
+![c06](resource/c09.gif)
+
+除了CSS，我们还可以通过JS来控制动画的暂停和播放。其实就是动态的通过JS来修改CSS的属性值，我们先来创建两个按钮：
+
+```html
+<button id="play-btn">播放</button>
+<button id="pause-btn">暂停</button>
+```
+
+然后，给两个按钮添加点击事件：
+
+```js
+window.onload = function () {
+  document.getElementById('play-btn').onclick = function () {
+    document.getElementsByClassName('animate-object-14')[0].style.animationPlayState = 'running'
+  }
+  document.getElementById('pause-btn').onclick = function () {
+    document.getElementsByClassName('animate-object-14')[0].style.animationPlayState = 'paused'
+  }
+}
+```
+
+然后我们让这个小球球是始终无限循环滚动的：
+
+```css
+.animate-object-14 {
+  animation: keepMoving02 3s cubic-bezier(.78, 1.45, .86, .93) infinite alternate both;
+}
+```
+
+最后就可以实现如下这个效果啦：
+
+![c06](resource/c10.gif)
+
+
+
+### C. 总结
+
+整体看来，CSS3的动画复杂的地方主要是应用动画时候的CSS属性设置，我们再整体总结一下：
+
+```css
+animation-name: 指定用哪个动画剧本，就改这个属性
+animation-duration: 想控制动画几秒钟播放完毕（播放速度有多快），就改这个属性
+animation-timing-function: 想不让动画匀速播放就设置这个属性
+animation-delay: 最开始想让动画延迟几秒播放，就改这个属性
+animation-iteration-count: 想设置动画重复播放几次，就改这个属性
+animation-direction: 想设置动画有倒放效果，就设置这个属性
+animation-fill-mode: 想设置动画播放前（延迟时间内）和播放后用哪套样式，就改这个属性
+animation-play-state: 想暂停、播放动画，就设置这个属性
+```
+今天这篇文章实际上只算是一个入门，CSS3的动画在组合起来实际上可以做出更加炫酷的效果，我们以后找个时间再往深了唠唠高级点的应用~
+
+怎么样，你学会了吗？如果还有疑问，可以加我微信：LemonITCN

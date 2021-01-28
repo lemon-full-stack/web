@@ -60,8 +60,25 @@
 
         @keyframes keepMoving01 {
             0% {
-                left: 0px;
+                left: 0;
                 background: #7cd460;
+            }
+
+            50% {
+                background: #333333;
+            }
+
+            100% {
+                left: 500px;
+                background: #fbe760;
+                transform: rotate(360deg);
+            }
+        }
+
+        @keyframes keepMoving02 {
+            0% {
+                left: 0;
+                background: #ff0000;
             }
 
             50% {
@@ -100,13 +117,48 @@
         }
 
         .animate-object-08 {
-            animation: keepMoving01 3s cubic-bezier(.17,.67,.41,1.67) 2s 4 alternate;
+            animation: keepMoving01 3s cubic-bezier(.17, .67, .41, 1.67) 2s 4 alternate;
         }
 
         .animate-object-09 {
-            animation: keepMoving01 3s cubic-bezier(.78,1.45,.86,.93) 2s 1 forwards;
+            animation: keepMoving02 3s cubic-bezier(.78, 1.45, .86, .93) 2s 1 normal forwards;
+        }
+
+        .animate-object-10 {
+            animation: keepMoving02 3s cubic-bezier(.78, 1.45, .86, .93) 2s 1 normal backwards;
+        }
+
+        .animate-object-11 {
+            animation: keepMoving02 3s cubic-bezier(.78, 1.45, .86, .93) 2s 1 normal none;
+        }
+
+        .animate-object-12 {
+            animation: keepMoving02 3s cubic-bezier(.78, 1.45, .86, .93) 2s 1 normal both;
+        }
+
+        .animate-object-13 {
+            animation: keepMoving02 3s cubic-bezier(.78, 1.45, .86, .93) infinite alternate both;
+            animation-play-state: paused;
+        }
+
+        .animate-object-13:hover {
+            animation-play-state: running;
+        }
+
+        .animate-object-14 {
+            animation: keepMoving02 3s cubic-bezier(.78, 1.45, .86, .93) infinite alternate both;
         }
     </style>
+    <script type="text/javascript">
+      window.onload = function () {
+        document.getElementById('play-btn').onclick = function () {
+          document.getElementsByClassName('animate-object-14')[0].style.animationPlayState = 'running'
+        }
+        document.getElementById('pause-btn').onclick = function () {
+          document.getElementsByClassName('animate-object-14')[0].style.animationPlayState = 'paused'
+        }
+      }
+    </script>
 </head>
 
 <body>
@@ -176,10 +228,51 @@
 </div>
 
 <div class="module-style">
-    animation: keepMoving01 3s cubic-bezier(.69,1.76,.66,.73) 2s 1;
+    animation: keepMoving02 3s cubic-bezier(.78,1.45,.86,.93) 2s 1 normal forwards;
 </div>
 <div class="module-content">
     <div class="animate-object animate-object-09">我是一<br>个球😁</div>
+</div>
+
+<div class="module-style">
+    animation: keepMoving02 3s cubic-bezier(.78,1.45,.86,.93) 2s 1 normal backwards;
+</div>
+<div class="module-content">
+    <div class="animate-object animate-object-10">我是一<br>个球😁</div>
+</div>
+
+<div class="module-style">
+    animation: keepMoving02 3s cubic-bezier(.78,1.45,.86,.93) 2s 1 normal none;
+</div>
+<div class="module-content">
+    <div class="animate-object animate-object-11">我是一<br>个球😁</div>
+</div>
+
+<div class="module-style">
+    animation: keepMoving02 3s cubic-bezier(.78,1.45,.86,.93) 2s 1 normal both;
+</div>
+<div class="module-content">
+    <div class="animate-object animate-object-12">我是一<br>个球😁</div>
+</div>
+
+<div class="module-style">
+    鼠标放到球上才会向前滚动<br>
+    animation: keepMoving02 3s cubic-bezier(.78, 1.45, .86, .93) infinite alternate both;
+</div>
+<div class="module-content">
+    <div class="animate-object animate-object-13">我是一<br>个球😁</div>
+</div>
+
+<div class="module-style">
+    通过播放、暂停按钮控制滚动<br>
+    animation: keepMoving02 3s cubic-bezier(.78, 1.45, .86, .93) infinite alternate both;
+</div>
+<div class="module-content">
+    <div class="animate-object animate-object-14">我是一<br>个球😁</div>
+</div>
+<div class="control-content">
+    <button id="play-btn">播放</button>
+    <button id="pause-btn">暂停</button>
 </div>
 </body>
 
